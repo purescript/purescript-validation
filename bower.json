@@ -1,0 +1,16 @@
+{
+  "name": "purescript-validation",
+  "version": "0.0.1",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "output",
+    "node_modules",
+    "tests",
+    "tmp",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+  }
+}
