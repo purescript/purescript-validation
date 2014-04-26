@@ -1,6 +1,5 @@
-/output/
-/node_modules/
 /bower_components/
-/psci_modules/
+/node_modules/
+/output/
 /tmp/
 /.psci
