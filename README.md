@@ -1,10 +1,25 @@
-# purescript-validation
+# Module Documentation
 
-A data type for applicative validation
+## Module Data.Validation
 
-### Usage
+### Types
 
-The `V` data type can be used to validate data.
+    data V err result where
 
-The type `V err result` describes possibly valid values of type `result` with validation errors in the semigroup `err`.
 
+### Type Class Instances
+
+    instance applicativeV :: (Semigroup err) => Applicative (V err)
+
+    instance applyV :: (Semigroup err) => Apply (V err)
+
+    instance functorV :: Functor (V err)
+
+
+### Values
+
+    invalid :: forall err result. err -> V err result
+
+    isValid :: forall err result r. V err result -> Prim.Boolean
+
+    runV :: forall err result r. (err -> r) -> (result -> r) -> V err result -> r
