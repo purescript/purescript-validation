@@ -4,7 +4,7 @@
 
 ### Types
 
-    data V err result where
+    data V err result
 
 
 ### Type Class Instances
@@ -20,6 +20,6 @@
 
     invalid :: forall err result. err -> V err result
 
-    isValid :: forall err result r. V err result -> Prim.Boolean
+    isValid :: forall err result r. V err result -> Boolean
 
     runV :: forall err result r. (err -> r) -> (result -> r) -> V err result -> r
