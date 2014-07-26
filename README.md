@@ -15,6 +15,8 @@
 
     instance functorV :: Functor (V err)
 
+    instance showV :: (Show err, Show result) => Show (V err result)
+
 
 ### Values
 
