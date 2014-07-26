@@ -18,6 +18,10 @@ isValid :: forall err result r. V err result -> Boolean
 isValid (Valid _) = true
 isValid _ = false
 
+instance showV :: (Show err, Show result) => Show (V err result) where
+  show (Invalid err) = "Invalid (" ++ show err ++ ")"
+  show (Valid result) = "Valid (" ++ show result ++ ")"
+
 instance functorV :: Functor (V err) where
   (<$>) _ (Invalid err) = Invalid err
   (<$>) f (Valid result) = Valid (f result)
