@@ -4,7 +4,7 @@
 -- | that it allows us to collect multiple errors using a `Semigroup`, whereas
 -- | `Either` terminates on the first error.
 
-module Data.Validation (
+module Data.Validation.Semigroup (
   V(),
   invalid,
   runV,
