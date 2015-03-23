@@ -1,8 +1,9 @@
--- | This module defines an `Alternative` instances for 
--- | validations that supports errors with multiple alternatives
+-- | This module defines a variant of applicative validation with 
+-- | an `Alternative` instance, for validators which support errors
+-- | with multiple alternatives.
 -- |
--- | This validation works exactly as `Data.Validation`
--- | but uses `Semiring` instead of `Semigroup`
+-- | The API is equivalent to `Data.Validation`,
+-- | but uses `Semiring` instead of `Semigroup`.
 module Data.Validation.Semiring (
   V(),
   invalid,
