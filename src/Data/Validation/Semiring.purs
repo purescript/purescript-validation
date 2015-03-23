@@ -14,7 +14,14 @@ import Control.Alt
 import Control.Plus
 import Control.Alternative
 
--- | example
+
+-- | The `V` functor, used for alternative validation
+-- |
+-- | The `Alternative` instance collects multiple failures in
+-- | an arbitrary `Semiring`.
+-- | 
+-- | For example:
+-- | 
 -- | ```purescript
 -- | import Data.Semiring.Free
 -- | 

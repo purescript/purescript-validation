@@ -1,6 +1,6 @@
 # Module Documentation
 
-## Module Data.Validation.Semigroup
+## Module Data.Validation
 
 
 This module defines an applicative functor for _applicative validation_.
@@ -99,7 +99,13 @@ but uses `Semiring` instead of `Semigroup`
 data V err res
 ```
 
-example
+The `V` functor, used for alternative validation
+
+The `Alternative` instance collects multiple failures in
+an arbitrary `Semiring`.
+
+For example:
+
 ```purescript
 import Data.Semiring.Free
 
