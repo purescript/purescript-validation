@@ -87,10 +87,10 @@ instance applicativeV :: (Semigroup err) => Applicative (V err)
 ## Module Data.Validation.Semiring
 
 
-This module defines an applicative functor and alt instance for 
-validation that can go multiple ways
+This module defines an `Alternative` instances for 
+validations that supports errors with multiple alternatives
 
-This validation works exactly as `Data.Validation.Semigroup`
+This validation works exactly as `Data.Validation`
 but uses `Semiring` instead of `Semigroup`
 
 #### `V`
@@ -101,7 +101,9 @@ data V err res
 
 example
 ```purescript
-validate r :: Person -> V (FreeSemiring Error) Person 
+import Data.Semiring.Free
+
+validate r :: Person -> V (Free Error) Person 
 validate person = { first: _, last: _, contact: _}
   <$> validateName person.first
   <*> validateName person.last
@@ -114,7 +116,7 @@ validate person = { first: _, last: _, contact: _}
 invalid :: forall err result. err -> V err result
 ```
 
-Fail 
+Fail with a validation error
 
 #### `runV`
 
@@ -122,7 +124,8 @@ Fail
 runV :: forall err result r. (err -> r) -> (result -> r) -> V err result -> r
 ```
 
-Unpack
+Unpack the `V` type constructor, providing functions to handle the error
+and success cases.
 
 #### `isValid`
 
@@ -130,7 +133,7 @@ Unpack
 isValid :: forall err result. V err result -> Boolean
 ```
 
-Check if valid
+Test whether validation was successful or not
 
 #### `showV`
 
@@ -164,4 +167,18 @@ instance applicativeV :: (Semiring err) => Applicative (V err)
 
 ``` purescript
 instance altV :: (Semiring err) => Alt (V err)
+```
+
+
+#### `plusV`
+
+``` purescript
+instance plusV :: (Semiring err) => Plus (V err)
+```
+
+
+#### `alernativeV`
+
+``` purescript
+instance alernativeV :: (Semiring err) => Alternative (V err)
 ```
