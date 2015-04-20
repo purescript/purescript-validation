@@ -12,6 +12,6 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-control": "~0.2.5"
+    "purescript-control": "~0.3.0"
   }
 }
