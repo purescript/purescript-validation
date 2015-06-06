@@ -11,6 +11,8 @@ module Data.Validation (
   isValid
   ) where
 
+import Prelude
+
 -- | The `V` functor, used for applicative validation
 -- |
 -- | The `Applicative` instance collects multiple failures in
@@ -19,7 +21,7 @@ module Data.Validation (
 -- | For example:
 -- |
 -- | ```purescript
--- | validate :: Person -> V [Error] Person
+-- | validate :: Person -> V (Array Error) Person
 -- | validate person = { first: _, last: _, email: _ }
 -- |   <$> validateName person.first
 -- |   <*> validateName person.last
@@ -47,14 +49,14 @@ instance showV :: (Show err, Show result) => Show (V err result) where
   show (Valid result) = "Valid (" ++ show result ++ ")"
 
 instance functorV :: Functor (V err) where
-  (<$>) _ (Invalid err) = Invalid err
-  (<$>) f (Valid result) = Valid (f result)
+  map _ (Invalid err) = Invalid err
+  map f (Valid result) = Valid (f result)
 
 instance applyV :: (Semigroup err) => Apply (V err) where
-  (<*>) (Invalid err1) (Invalid err2) = Invalid (err1 <> err2)
-  (<*>) (Invalid err) _ = Invalid err
-  (<*>) _ (Invalid err) = Invalid err
-  (<*>) (Valid f) (Valid x) = Valid (f x)
+  apply (Invalid err1) (Invalid err2) = Invalid (err1 <> err2)
+  apply (Invalid err) _ = Invalid err
+  apply _ (Invalid err) = Invalid err
+  apply (Valid f) (Valid x) = Valid (f x)
 
 instance applicativeV :: (Semigroup err) => Applicative (V err) where
   pure = Valid

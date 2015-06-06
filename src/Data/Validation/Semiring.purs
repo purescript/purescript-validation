@@ -11,10 +11,11 @@ module Data.Validation.Semiring (
   isValid
   ) where
 
+import Prelude
+
 import Control.Alt
 import Control.Plus
 import Control.Alternative
-
 
 -- | The `V` functor, used for alternative validation
 -- |
@@ -54,22 +55,22 @@ instance showV :: (Show err, Show result) => Show (V err result) where
   show (Valid result) = "Valid (" ++ show result ++ ")"
 
 instance functorV :: Functor (V err)  where
-  (<$>) _ (Invalid err) = Invalid err
-  (<$>) f (Valid result) = Valid (f result)
+  map _ (Invalid err) = Invalid err
+  map f (Valid result) = Valid (f result)
 
 instance applyV :: (Semiring err) => Apply (V err)  where
-  (<*>) (Invalid err1) (Invalid err2) = Invalid (err1 * err2)
-  (<*>) (Invalid err) _ = Invalid err
-  (<*>) _ (Invalid err) = Invalid err
-  (<*>) (Valid f) (Valid x) = Valid (f x)
+  apply (Invalid err1) (Invalid err2) = Invalid (err1 * err2)
+  apply (Invalid err) _ = Invalid err
+  apply _ (Invalid err) = Invalid err
+  apply (Valid f) (Valid x) = Valid (f x)
 
 instance applicativeV :: (Semiring err) => Applicative (V err) where
   pure = Valid
 
 instance altV :: (Semiring err) => Alt (V err) where
-  (<|>) (Invalid err1) (Invalid err2) = Invalid (err1 + err2)
-  (<|>) (Invalid _) a = a
-  (<|>) (Valid a) _ = Valid a 
+  alt (Invalid err1) (Invalid err2) = Invalid (err1 + err2)
+  alt (Invalid _) a = a
+  alt (Valid a) _ = Valid a 
 
 instance plusV :: (Semiring err) => Plus (V err) where
   empty = Invalid zero
