@@ -1,5 +1,9 @@
 {
   "name": "purescript-validation",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/purescript/purescript-validation.git"
+  },
   "ignore": [
     "**/.*",
     "bower_components",
@@ -12,6 +16,6 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-control": "~0.3.0"
+    "purescript-control": "^0.3.0"
   }
 }
