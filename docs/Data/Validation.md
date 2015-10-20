@@ -55,7 +55,7 @@ and success cases.
 #### `isValid`
 
 ``` purescript
-isValid :: forall err result r. V err result -> Boolean
+isValid :: forall err result. V err result -> Boolean
 ```
 
 Test whether validation was successful or not
