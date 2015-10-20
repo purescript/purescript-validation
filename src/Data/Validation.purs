@@ -40,7 +40,7 @@ runV f _ (Invalid err) = f err
 runV _ g (Valid result) = g result
 
 -- | Test whether validation was successful or not
-isValid :: forall err result r. V err result -> Boolean
+isValid :: forall err result. V err result -> Boolean
 isValid (Valid _) = true
 isValid _ = false
 
