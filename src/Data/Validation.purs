@@ -11,7 +11,7 @@ module Data.Validation (
   isValid
   ) where
 
-import Prelude
+import Prelude (class Applicative, class Semigroup, class Apply, class Functor, class Show, (<>), show, (++))
 
 -- | The `V` functor, used for applicative validation
 -- |
@@ -60,4 +60,3 @@ instance applyV :: (Semigroup err) => Apply (V err) where
 
 instance applicativeV :: (Semigroup err) => Applicative (V err) where
   pure = Valid
-
