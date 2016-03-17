@@ -1,4 +1,4 @@
--- | This module defines a variant of applicative validation with 
+-- | This module defines a variant of applicative validation with
 -- | an `Alternative` instance, for validators which support errors
 -- | with multiple alternatives.
 -- |
@@ -11,23 +11,23 @@ module Data.Validation.Semiring (
   isValid
   ) where
 
-import Prelude
+import Prelude (class Semiring, class Applicative, class Apply, class Functor, class Show, zero, (+), (*), show, (++))
 
-import Control.Alt
-import Control.Plus
-import Control.Alternative
+import Control.Alt (class Alt)
+import Control.Plus (class Plus)
+import Control.Alternative (class Alternative)
 
 -- | The `V` functor, used for alternative validation
 -- |
 -- | The `Alternative` instance collects multiple failures in
 -- | an arbitrary `Semiring`.
--- | 
+-- |
 -- | For example:
--- | 
+-- |
 -- | ```purescript
 -- | import Data.Semiring.Free
--- | 
--- | validate r :: Person -> V (Free Error) Person 
+-- |
+-- | validate r :: Person -> V (Free Error) Person
 -- | validate person = { first: _, last: _, contact: _}
 -- |   <$> validateName person.first
 -- |   <*> validateName person.last
@@ -70,9 +70,9 @@ instance applicativeV :: (Semiring err) => Applicative (V err) where
 instance altV :: (Semiring err) => Alt (V err) where
   alt (Invalid err1) (Invalid err2) = Invalid (err1 + err2)
   alt (Invalid _) a = a
-  alt (Valid a) _ = Valid a 
+  alt (Valid a) _ = Valid a
 
 instance plusV :: (Semiring err) => Plus (V err) where
   empty = Invalid zero
 
-instance alernativeV :: (Semiring err) => Alternative (V err) 
+instance alernativeV :: (Semiring err) => Alternative (V err)
