@@ -4,14 +4,14 @@
 -- | that it allows us to collect multiple errors using a `Semigroup`, whereas
 -- | `Either` terminates on the first error.
 
-module Data.Validation (
-  V(),
-  invalid,
-  runV,
-  isValid
+module Data.Validation.Semigroup
+  ( V
+  , unV
+  , invalid
+  , isValid
   ) where
 
-import Prelude (class Applicative, class Semigroup, class Apply, class Functor, class Show, (<>), show, (++))
+import Prelude
 
 -- | The `V` functor, used for applicative validation
 -- |
@@ -29,24 +29,35 @@ import Prelude (class Applicative, class Semigroup, class Apply, class Functor, 
 -- | ```
 data V err result = Invalid err | Valid result
 
+-- | Unpack the `V` type constructor, providing functions to handle the error
+-- | and success cases.
+unV :: forall err result r. (err -> r) -> (result -> r) -> V err result -> r
+unV f _ (Invalid err) = f err
+unV _ g (Valid result) = g result
+
 -- | Fail with a validation error
 invalid :: forall err result. err -> V err result
 invalid = Invalid
-
--- | Unpack the `V` type constructor, providing functions to handle the error
--- | and success cases.
-runV :: forall err result r. (err -> r) -> (result -> r) -> V err result -> r
-runV f _ (Invalid err) = f err
-runV _ g (Valid result) = g result
 
 -- | Test whether validation was successful or not
 isValid :: forall err result. V err result -> Boolean
 isValid (Valid _) = true
 isValid _ = false
 
+instance eqV :: (Eq err, Eq result) => Eq (V err result) where
+  eq (Invalid err1) (Invalid err2) = err1 == err2
+  eq (Valid result1) (Valid result2) = result1 == result2
+  eq _ _ = false
+
+instance ordV :: (Ord err, Ord result) => Ord (V err result) where
+  compare (Invalid err1) (Invalid err2) = compare err1 err2
+  compare (Invalid _) _ = LT
+  compare (Valid result1) (Valid result2) = compare result1 result2
+  compare (Valid _) _ = GT
+
 instance showV :: (Show err, Show result) => Show (V err result) where
-  show (Invalid err) = "Invalid (" ++ show err ++ ")"
-  show (Valid result) = "Valid (" ++ show result ++ ")"
+  show (Invalid err) = "(Invalid " <> show err <> ")"
+  show (Valid result) = "(Valid " <> show result <> ")"
 
 instance functorV :: Functor (V err) where
   map _ (Invalid err) = Invalid err

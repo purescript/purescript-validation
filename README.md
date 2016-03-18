@@ -12,7 +12,6 @@ Applicative validation.
 bower install purescript-validation
 ```
 
-## Module documentation
+## Documentation
 
-- [Data.Validation](docs/Data/Validation.md)
-- [Data.Validation.Semiring](docs/Data/Validation/Semiring.md)
+Module documentation is [published on Pursuit](http://pursuit.purescript.org/packages/purescript-validation).
