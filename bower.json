@@ -1,9 +1,7 @@
 {
   "name": "purescript-validation",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/purescript/purescript-validation.git"
-  },
+  "homepage": "https://github.com/purescript/purescript-validation",
+  "description": "Applicative validation",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -19,6 +17,6 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-control": "^0.3.0"
+    "purescript-control": "^1.0.0-rc.1"
   }
 }
