@@ -13,6 +13,8 @@ module Data.Validation.Semigroup
 
 import Prelude
 
+import Data.Bifunctor (class Bifunctor)
+
 -- | The `V` functor, used for applicative validation
 -- |
 -- | The `Applicative` instance collects multiple failures in
@@ -44,16 +46,9 @@ isValid :: forall err result. V err result -> Boolean
 isValid (Valid _) = true
 isValid _ = false
 
-instance eqV :: (Eq err, Eq result) => Eq (V err result) where
-  eq (Invalid err1) (Invalid err2) = err1 == err2
-  eq (Valid result1) (Valid result2) = result1 == result2
-  eq _ _ = false
+derive instance eqV :: (Eq err, Eq result) => Eq (V err result)
 
-instance ordV :: (Ord err, Ord result) => Ord (V err result) where
-  compare (Invalid err1) (Invalid err2) = compare err1 err2
-  compare (Invalid _) _ = LT
-  compare (Valid result1) (Valid result2) = compare result1 result2
-  compare (Valid _) _ = GT
+derive instance ordV :: (Ord err, Ord result) => Ord (V err result)
 
 instance showV :: (Show err, Show result) => Show (V err result) where
   show (Invalid err) = "(Invalid " <> show err <> ")"
@@ -62,6 +57,10 @@ instance showV :: (Show err, Show result) => Show (V err result) where
 instance functorV :: Functor (V err) where
   map _ (Invalid err) = Invalid err
   map f (Valid result) = Valid (f result)
+
+instance bifunctorV :: Bifunctor V where
+  bimap f _ (Invalid err) = Invalid (f err)
+  bimap _ g (Valid result) = Valid (g result)
 
 instance applyV :: (Semigroup err) => Apply (V err) where
   apply (Invalid err1) (Invalid err2) = Invalid (err1 <> err2)
