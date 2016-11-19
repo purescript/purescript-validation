@@ -1,8 +1,7 @@
 # purescript-validation
 
-[![Latest release](http://img.shields.io/bower/v/purescript-validation.svg)](https://github.com/purescript/purescript-validation/releases)
-[![Build Status](https://travis-ci.org/purescript/purescript-validation.svg?branch=master)](https://travis-ci.org/purescript/purescript-validation)
-[![Dependency Status](https://www.versioneye.com/user/projects/55848c78363861001b00019b/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55848c78363861001b00019b)
+[![Latest release](http://img.shields.io/github/release/purescript/purescript-validation.svg)](https://github.com/purescript/purescript-validation/releases)
+[![Build status](https://travis-ci.org/purescript/purescript-validation.svg?branch=master)](https://travis-ci.org/purescript/purescript-validation)
 
 Applicative validation.
 
