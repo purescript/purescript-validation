@@ -14,10 +14,12 @@ module Data.Validation.Semiring
 import Prelude
 
 import Control.Alt (class Alt)
-import Control.Plus (class Plus)
 import Control.Alternative (class Alternative)
+import Control.Parallel.Class (class Parallel)
+import Control.Plus (class Plus)
 
 import Data.Bifunctor (class Bifunctor)
+import Data.Either (Either(..), either)
 
 -- | The `V` functor, used for alternative validation
 -- |
@@ -86,3 +88,7 @@ instance plusV :: (Semiring err) => Plus (V err) where
   empty = Invalid zero
 
 instance alernativeV :: (Semiring err) => Alternative (V err)
+
+instance parallelV :: Semiring err => Parallel (V err) (Either err) where
+  parallel = either Invalid Valid
+  sequential = unV Left Right
