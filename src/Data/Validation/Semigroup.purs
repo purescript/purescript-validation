@@ -13,7 +13,10 @@ module Data.Validation.Semigroup
 
 import Prelude
 
+import Control.Parallel.Class (class Parallel)
+
 import Data.Bifunctor (class Bifunctor)
+import Data.Either (Either(..), either)
 
 -- | The `V` functor, used for applicative validation
 -- |
@@ -70,3 +73,7 @@ instance applyV :: (Semigroup err) => Apply (V err) where
 
 instance applicativeV :: (Semigroup err) => Applicative (V err) where
   pure = Valid
+
+instance parallelV :: Semigroup err => Parallel (V err) (Either err) where
+  parallel = either Invalid Valid
+  sequential = unV Left Right

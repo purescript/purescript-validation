@@ -17,6 +17,10 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-bifunctors": "^2.0.0"
+    "purescript-bifunctors": "^2.0.0",
+    "purescript-parallel": "^2.1.0"
+  },
+  "devDependencies": {
+    "purescript-assert": "^2.0.0"
   }
 }
