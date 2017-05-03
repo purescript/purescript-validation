@@ -13,11 +13,13 @@ module Data.Validation.Semiring
 
 import Prelude
 
+import Control.Apply (lift2)
 import Control.Alt (class Alt)
 import Control.Plus (class Plus)
 import Control.Alternative (class Alternative)
 
 import Data.Bifunctor (class Bifunctor)
+import Data.Monoid (class Monoid, mempty)
 
 -- | The `V` functor, used for alternative validation
 -- |
@@ -76,6 +78,12 @@ instance applyV :: (Semiring err) => Apply (V err)  where
 
 instance applicativeV :: (Semiring err) => Applicative (V err) where
   pure = Valid
+
+instance semigroupV :: (Semiring err, Semigroup a) => Semigroup (V err a) where
+  append = lift2 append
+
+instance monoidV :: (Semiring err, Monoid a) => Monoid (V err a) where
+  mempty = pure mempty
 
 instance altV :: (Semiring err) => Alt (V err) where
   alt (Invalid err1) (Invalid err2) = Invalid (err1 + err2)

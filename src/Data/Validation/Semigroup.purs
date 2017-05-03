@@ -14,6 +14,8 @@ module Data.Validation.Semigroup
 import Prelude
 
 import Data.Bifunctor (class Bifunctor)
+import Data.Monoid (class Monoid, mempty)
+import Control.Apply (lift2)
 
 -- | The `V` functor, used for applicative validation
 -- |
@@ -70,3 +72,9 @@ instance applyV :: (Semigroup err) => Apply (V err) where
 
 instance applicativeV :: (Semigroup err) => Applicative (V err) where
   pure = Valid
+
+instance semigroupV :: (Semigroup err, Semigroup a) => Semigroup (V err a) where
+  append = lift2 append
+
+instance monoidV :: (Semigroup err, Monoid a) => Monoid (V err a) where
+  mempty = pure mempty

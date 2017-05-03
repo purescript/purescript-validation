@@ -17,6 +17,7 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-bifunctors": "^3.0.0"
+    "purescript-bifunctors": "^3.0.0",
+    "purescript-monoid": "^3.0.0"
   }
 }
