@@ -13,9 +13,10 @@ module Data.Validation.Semigroup
 
 import Prelude
 
+import Control.Apply (lift2)
+
 import Data.Bifunctor (class Bifunctor)
 import Data.Monoid (class Monoid, mempty)
-import Control.Apply (lift2)
 
 -- | The `V` functor, used for applicative validation
 -- |

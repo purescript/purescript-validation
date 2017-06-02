@@ -13,8 +13,8 @@ module Data.Validation.Semiring
 
 import Prelude
 
-import Control.Apply (lift2)
 import Control.Alt (class Alt)
+import Control.Apply (lift2)
 import Control.Plus (class Plus)
 import Control.Alternative (class Alternative)
 
