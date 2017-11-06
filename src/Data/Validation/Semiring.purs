@@ -14,12 +14,13 @@ module Data.Validation.Semiring
 import Prelude
 
 import Control.Alt (class Alt)
+import Control.Alternative (class Alternative)
 import Control.Apply (lift2)
 import Control.Plus (class Plus)
-import Control.Alternative (class Alternative)
-
 import Data.Bifunctor (class Bifunctor)
+import Data.Foldable (class Foldable)
 import Data.Monoid (class Monoid, mempty)
+import Data.Traversable (class Traversable)
 
 -- | The `V` functor, used for alternative validation
 -- |
@@ -94,3 +95,12 @@ instance plusV :: (Semiring err) => Plus (V err) where
   empty = Invalid zero
 
 instance alernativeV :: (Semiring err) => Alternative (V err)
+
+instance foldableV :: Foldable (V err) where
+  foldMap = unV (const mempty)
+  foldr f b = unV (const b) (flip f b)
+  foldl f b = unV (const b) (f b)
+
+instance traversableV :: Traversable (V err) where
+  sequence = unV (pure <<< Invalid) (map Valid)
+  traverse f = unV (pure <<< Invalid) (map Valid <<< f)

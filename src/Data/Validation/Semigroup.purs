@@ -14,9 +14,10 @@ module Data.Validation.Semigroup
 import Prelude
 
 import Control.Apply (lift2)
-
 import Data.Bifunctor (class Bifunctor)
+import Data.Foldable (class Foldable)
 import Data.Monoid (class Monoid, mempty)
+import Data.Traversable (class Traversable)
 
 -- | The `V` functor, used for applicative validation
 -- |
@@ -79,3 +80,12 @@ instance semigroupV :: (Semigroup err, Semigroup a) => Semigroup (V err a) where
 
 instance monoidV :: (Semigroup err, Monoid a) => Monoid (V err a) where
   mempty = pure mempty
+
+instance foldableV :: Foldable (V err) where
+  foldMap = unV (const mempty)
+  foldr f b = unV (const b) (flip f b)
+  foldl f b = unV (const b) (f b)
+
+instance traversableV :: Traversable (V err) where
+  sequence = unV (pure <<< Invalid) (map Valid)
+  traverse f = unV (pure <<< Invalid) (map Valid <<< f)
