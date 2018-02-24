@@ -197,7 +197,7 @@ goodForm = {username: "alice", password: "FooBarBaz"}
 -- | the console.
 -- |
 -- | We'll cheat a little here and use `unsafeStringify` to get a `Show`able
--- | version of oru `ValidatedFormData` record.
+-- | version of our `ValidatedFormData` record.
 main :: forall e. Eff (console :: CONSOLE | e) Unit
 main = do
   printValidation $ validateForm emptyUsernameAndPassword
