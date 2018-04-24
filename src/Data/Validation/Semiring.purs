@@ -19,7 +19,6 @@ import Control.Apply (lift2)
 import Control.Plus (class Plus)
 import Data.Bifunctor (class Bifunctor)
 import Data.Foldable (class Foldable)
-import Data.Monoid (class Monoid, mempty)
 import Data.Traversable (class Traversable)
 
 -- | The `V` functor, used for alternative validation

@@ -17,8 +17,7 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-bifunctors": "^3.0.0",
-    "purescript-monoid": "^3.0.0",
-    "purescript-foldable-traversable": "^3.6.1"
+    "purescript-bifunctors": "#compiler/0.12",
+    "purescript-foldable-traversable": "#compiler/0.12"
   }
 }

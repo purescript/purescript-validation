@@ -16,7 +16,6 @@ import Prelude
 import Control.Apply (lift2)
 import Data.Bifunctor (class Bifunctor)
 import Data.Foldable (class Foldable)
-import Data.Monoid (class Monoid, mempty)
 import Data.Traversable (class Traversable)
 
 -- | The `V` functor, used for applicative validation
