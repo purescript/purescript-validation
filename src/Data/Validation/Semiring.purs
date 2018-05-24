@@ -1,9 +1,6 @@
 -- | This module defines a variant of applicative validation with
--- | an `Alternative` instance, for validators which support errors
+-- | an `Alt` instance, for validators which support errors
 -- | with multiple alternatives.
--- |
--- | The API is equivalent to `Data.Validation`,
--- | but uses `Semiring` instead of `Semigroup`.
 module Data.Validation.Semiring
   ( V
   , unV
@@ -15,7 +12,6 @@ module Data.Validation.Semiring
 import Prelude
 
 import Control.Alt (class Alt)
-import Control.Alternative (class Alternative)
 import Control.Apply (lift2)
 import Control.Plus (class Plus)
 import Data.Bifunctor (class Bifunctor)
@@ -98,8 +94,6 @@ instance altV :: Semiring err => Alt (V err) where
 
 instance plusV :: Semiring err => Plus (V err) where
   empty = V (Left zero)
-
-instance alernativeV :: Semiring err => Alternative (V err)
 
 instance foldableV :: Foldable (V err) where
   foldMap = unV (const mempty)

@@ -1,8 +1,7 @@
 {
   "name": "purescript-validation",
   "homepage": "https://github.com/purescript/purescript-validation",
-  "description": "Applicative validation",
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "git://github.com/purescript/purescript-validation.git"
@@ -17,6 +16,10 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-either": "#compiler/0.12"
+    "purescript-bifunctors": "^4.0.0",
+    "purescript-control": "^4.0.0",
+    "purescript-either": "^4.0.0",
+    "purescript-foldable-traversable": "^4.0.0",
+    "purescript-prelude": "^4.0.0"
   }
 }
