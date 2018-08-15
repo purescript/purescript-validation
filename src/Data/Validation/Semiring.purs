@@ -58,8 +58,12 @@ toEither :: forall err result. V err result -> Either err result
 toEither (V e) = e
 
 -- | Apply a function if successful, to enable chaining of validation.
--- | Similar to a monadic bind, except it doesn't satisfy the laws.
-andThen :: forall e a b . V e a -> (a -> V e b) -> V e b
+-- |
+-- | Similar to a monadic bind, except it is inconsistent with Apply - that is,
+-- | where as `apply (V err a) (V err a)` accumulates failures,
+-- | `(V err a) ``andThen`` (\a -> V err a)` has fail-fast semantics
+-- | (`>>=` would be expected to be consistent).
+andThen :: forall err a b. V err a -> (a -> V err b) -> V err b
 andThen v1 f =
   unV invalid f v1
 
