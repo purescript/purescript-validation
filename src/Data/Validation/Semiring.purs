@@ -57,6 +57,12 @@ isValid _ = false
 toEither :: forall err result. V err result -> Either err result
 toEither (V e) = e
 
+-- | Apply a function if successful, to enable chaining of validation.
+-- | Similar to a monadic bind, except it doesn't satisfy the laws.
+andThen :: forall e a b . V e a -> (a -> V e b) -> V e b
+andThen v1 f =
+  unV invalid f v1
+
 derive instance eqV :: (Eq err, Eq result) => Eq (V err result)
 derive instance eq1V :: Eq err => Eq1 (V err)
 
