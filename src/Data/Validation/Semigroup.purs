@@ -59,8 +59,8 @@ toEither (V e) = e
 -- | Apply a function if successful, to enable chaining of validation.
 -- |
 -- | Similar to a monadic bind, except it is inconsistent with Apply - that is,
--- | where as `apply (V err a) (V err a)` accumulates failures,
--- | `(V err a) ``andThen`` (\a -> V err a)` has fail-fast semantics
+-- | where as apply accumulates failures: `apply (invalid x) (invalid y) = invalid (x <> y)`,
+-- | andThen has fail-fast semantics: `andThen (invalid x) (\_ -> invalid y) = invalid x`
 -- | (`>>=` would be expected to be consistent).
 andThen :: forall err a b. V err a -> (a -> V err b) -> V err b
 andThen v1 f =
