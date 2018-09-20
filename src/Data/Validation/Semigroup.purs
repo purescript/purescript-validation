@@ -10,6 +10,7 @@ module Data.Validation.Semigroup
   , invalid
   , isValid
   , toEither
+  , andThen
   ) where
 
 import Prelude

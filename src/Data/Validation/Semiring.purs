@@ -7,6 +7,7 @@ module Data.Validation.Semiring
   , invalid
   , isValid
   , toEither
+  , andThen
   ) where
 
 import Prelude
