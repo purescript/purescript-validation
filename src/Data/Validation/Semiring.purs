@@ -2,7 +2,7 @@
 -- | an `Alt` instance, for validators which support errors
 -- | with multiple alternatives.
 module Data.Validation.Semiring
-  ( V
+  ( V(..)
   , unV
   , invalid
   , isValid

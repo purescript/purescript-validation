@@ -5,7 +5,7 @@
 -- | `Either` terminates on the first error.
 
 module Data.Validation.Semigroup
-  ( V
+  ( V(..)
   , unV
   , invalid
   , isValid
