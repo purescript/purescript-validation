@@ -5,7 +5,7 @@
 -- | `Either` terminates on the first error.
 
 module Data.Validation.Semigroup
-  ( V
+  ( V(..)
   , unV
   , invalid
   , isValid
@@ -21,6 +21,7 @@ import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable)
 import Data.Ord (class Ord1)
 import Data.Traversable (class Traversable)
+import Data.Newtype (class Newtype)
 
 -- | The `V` functor, used for applicative validation
 -- |
@@ -37,6 +38,8 @@ import Data.Traversable (class Traversable)
 -- |   <*> validateEmail person.email
 -- | ```
 newtype V err result = V (Either err result)
+
+derive instance newtypeV :: Newtype (V err result) _
 
 -- | Unpack the `V` type constructor, providing functions to handle the error
 -- | and success cases.
