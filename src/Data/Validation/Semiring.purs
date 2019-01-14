@@ -7,6 +7,7 @@ module Data.Validation.Semiring
   , invalid
   , isValid
   , toEither
+  , andThen
   ) where
 
 import Prelude
@@ -56,6 +57,16 @@ isValid _ = false
 
 toEither :: forall err result. V err result -> Either err result
 toEither (V e) = e
+
+-- | Apply a function if successful, to enable chaining of validation.
+-- |
+-- | Similar to a monadic bind, except it is inconsistent with Apply - that is,
+-- | where as `apply (V err a) (V err a)` accumulates failures,
+-- | `(V err a) ``andThen`` (\a -> V err a)` has fail-fast semantics
+-- | (`>>=` would be expected to be consistent).
+andThen :: forall err a b. V err a -> (a -> V err b) -> V err b
+andThen v1 f =
+  unV invalid f v1
 
 derive instance eqV :: (Eq err, Eq result) => Eq (V err result)
 derive instance eq1V :: Eq err => Eq1 (V err)
