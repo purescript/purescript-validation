@@ -1,9 +1,9 @@
-module Main where
+module Semigroup where
 
 import Prelude
 
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, logShow)
+import Effect (Effect)
+import Effect.Console (logShow)
 import Data.Array (singleton)
 import Data.Bifunctor (bimap)
 import Data.Generic.Rep (class Generic)
@@ -198,7 +198,7 @@ goodForm = {username: "alice", password: "FooBarBaz"}
 -- |
 -- | We'll cheat a little here and use `unsafeStringify` to get a `Show`able
 -- | version of our `ValidatedFormData` record.
-main :: forall e. Eff (console :: CONSOLE | e) Unit
+main :: Effect Unit
 main = do
   printValidation $ validateForm emptyUsernameAndPassword
   -- > (Invalid [(BadUsername [FieldIsEmpty,FieldIsTooShort]),(BadPassword [FieldIsEmpty,FieldIsTooShort,FieldIsAllLower])])

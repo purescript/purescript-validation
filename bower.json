@@ -24,6 +24,9 @@
     "purescript-newtype": "^3.0.0"
   },
   "devDependencies": {
-    "purescript-psci-support": "^4.0.0"
+    "purescript-psci-support": "^4.0.0",
+    "purescript-console": "^4.2.0",
+    "purescript-generics-rep": "^6.1.0",
+    "purescript-strings": "^4.0.0"
   }
 }
