@@ -4,10 +4,15 @@ import Prelude
 
 import Effect (Effect)
 import Effect.Console (logShow)
-import Data.Array (singleton)
+import Data.Array.NonEmpty (NonEmptyArray)
+import Data.Array.NonEmpty as NonEmpty
 import Data.Bifunctor (bimap)
 import Data.Generic.Rep (class Generic)
+import Data.Generic.Rep.Eq (genericEq)
+import Data.Generic.Rep.Ord (genericCompare)
 import Data.Generic.Rep.Show (genericShow)
+import Data.Map (Map)
+import Data.Map as Map
 import Data.String (length, null, toLower, toUpper)
 import Data.Validation.Semigroup (V, invalid)
 import Global.Unsafe (unsafeStringify)
@@ -54,10 +59,6 @@ derive instance genericValidationError :: Generic ValidationError _
 instance showValidationError :: Show ValidationError where
   show = genericShow
 
--- | `ValidationErrors` is a helpful type alias for an `Array` of the errors
--- | we might encounter during the validation process.
-type ValidationErrors = Array ValidationError
-
 -- | A note on `Data.Validation.Semigroup`'s `V`:
 -- |
 -- | `V` is a sum type with an `Invalid` side that collects the errors
@@ -70,9 +71,9 @@ type ValidationErrors = Array ValidationError
 -- | side of `V`.
 -- |
 -- | Otherwise, it just returns the input on the `Valid` side of `V`.
-validateNonEmpty :: String -> V ValidationErrors String
+validateNonEmpty :: String -> V (NonEmptyArray ValidationError) String
 validateNonEmpty input
-  | null input = invalid [FieldIsEmpty]
+  | null input = invalid $ NonEmpty.singleton FieldIsEmpty
   | otherwise = pure input
 
 -- | This function validates that an input `String` is at greater than or equal
@@ -82,9 +83,9 @@ validateNonEmpty input
 -- | `FieldIsTooShort` error on the `Invalid` side of `V`.
 -- |
 -- | Otherwise, it just returns the input on the `Valid` side of `V`.
-validateMinimumLength :: Int -> String -> V ValidationErrors String
+validateMinimumLength :: Int -> String -> V (NonEmptyArray ValidationError) String
 validateMinimumLength validLength input
-  | length input <= validLength = invalid [FieldIsTooShort]
+  | length input <= validLength = invalid (NonEmpty.singleton FieldIsTooShort)
   | otherwise = pure input
 
 -- | This function validates that an input `String` uses some mix of upper- and
@@ -95,30 +96,55 @@ validateMinimumLength validLength input
 -- | the field was entirely upper- or lower-case, respectively.
 -- |
 -- | Otherwise, it just returns the input on the `Valid` side of `V`.
-validateMixedCase :: String -> V ValidationErrors String
+validateMixedCase :: String -> V (NonEmptyArray ValidationError) String
 validateMixedCase input
-  | toLower input == input = invalid [FieldIsAllLower]
-  | toUpper input == input = invalid [FieldIsAllUpper]
+  | toLower input == input = invalid (NonEmpty.singleton FieldIsAllLower)
+  | toUpper input == input = invalid (NonEmpty.singleton FieldIsAllUpper)
   | otherwise = pure input
 
--- | `FormValidationError` represents the errors we might encounter while
--- | attempting to validate the username and password fields of our form.
+-- | `InvalidField` represents the fields of some form that have failed 
+-- | validation
 -- |
--- | The `BadUsername` and `BadPassword` branches help us distinguish which
--- | part of the form failed validation.
-data FormValidationError
-  = BadUsername ValidationErrors
-  | BadPassword ValidationErrors
+-- | It is used as a key for the `Map` that associates `NonEmptyArray`s of
+-- | `ValidationError`s with the field that was invalid.
+data InvalidField
+  = InvalidUsername
+  | InvalidPassword
+
+-- | Generically derive a `Show` instance for `InvalidField` so that we may
+-- | print these errors to the console later.
+derive instance genericInvalidField :: Generic InvalidField _
+instance showInvalidField :: Show InvalidField where
+  show = genericShow
+
+-- | Generically derive an `Eq` instance for `InvalidField` so that we may
+-- | generically derive an `Ord` instance, so that it may be used as a key in a
+-- | `Map`.
+instance eqInvalidField :: Eq InvalidField where
+  eq = genericEq
+
+-- | Generically derive an `Ord` instance for `InvalidField` so that we may
+-- | use it as a key in a `Map`.
+instance ordInvalidField :: Ord InvalidField where
+  compare = genericCompare
+
+-- | `FormValidationErrors` represents all `ValidationError`s associated with
+-- | a particular `ValidationField` that was invalid.
+newtype FormValidationErrors =
+  FormValidationErrors (Map InvalidField (NonEmptyArray ValidationError))
+
+-- | Provide a `Semigroup` instance for `FormValidationErrors` that combines
+-- | errors using the `Map.unionWith` operation, so as to avoid returning 
+-- | duplicate entries when fields fail with overlapping errors.
+instance semigroupFormValidationErrors :: Semigroup FormValidationErrors where
+  append (FormValidationErrors errs1) (FormValidationErrors errs2) =
+    FormValidationErrors $ Map.unionWith (<>) errs1 errs2 
 
 -- | Generically derive a `Show` instance for `FormValidationError` so that we
 -- | may print these errors to the console later.
-derive instance genericFormValidationError :: Generic FormValidationError _
-instance showFormValidationError :: Show FormValidationError where
+derive instance genericFormValidationError :: Generic FormValidationErrors _
+instance showFormValidationErrors :: Show FormValidationErrors where
   show = genericShow
-
--- | Much like `ValidationErrors`, `FormValidationErrors` is a helpful alias
--- | for an `Array` of errors specific to the validation of our form fields.
-type FormValidationErrors = Array FormValidationError
 
 -- | This function validates that an input string conforms to our requirements
 -- | for a valid username. Namely, we require that the input be non-empty and at
@@ -133,9 +159,10 @@ type FormValidationErrors = Array FormValidationError
 -- | Otherwise, it returns the input wrapped in the `Username` newtype to
 -- | distinguish it from a normal, unvalidated `String`.
 validateUsername :: String -> V FormValidationErrors Username
-validateUsername input = bimap (singleton <<< BadUsername) Username
-  $  validateNonEmpty input
-  *> validateMinimumLength 4 input
+validateUsername input = 
+  bimap (FormValidationErrors <<< Map.singleton InvalidUsername) Username
+    $  validateNonEmpty input
+    *> validateMinimumLength 4 input
 
 -- | This function validates that an input string conforms to our requirements
 -- | for a valid password. Namely, we require that the input be non-empty, at
@@ -151,10 +178,11 @@ validateUsername input = bimap (singleton <<< BadUsername) Username
 -- | Otherwise, it returns the input wrapped in the `Password` newtype to
 -- | distinguish it from a normal, unvalidated `String`.
 validatePassword :: String -> V FormValidationErrors Password
-validatePassword input = bimap (singleton <<< BadPassword) Password
-  $  validateNonEmpty input
-  *> validateMinimumLength 6 input
-  *> validateMixedCase input
+validatePassword input = 
+  bimap (FormValidationErrors <<< Map.singleton InvalidPassword) Password
+    $  validateNonEmpty input
+    *> validateMinimumLength 6 input
+    *> validateMixedCase input
 
 -- | This function validates that an `UnvalidatedFormData` record contains both
 -- | a valid username and a valid password, per the requirements specified in
@@ -166,7 +194,9 @@ validatePassword input = bimap (singleton <<< BadPassword) Password
 -- |
 -- | Otherwise, it returns the validated fields in the `ValidatedFormData`
 -- | record specified above.
-validateForm :: UnvalidatedFormData -> V FormValidationErrors ValidatedFormData
+validateForm 
+  :: UnvalidatedFormData 
+  -> V FormValidationErrors ValidatedFormData
 validateForm {username, password} = {username: _, password: _}
   <$> validateUsername username
   <*> validatePassword password
@@ -201,18 +231,19 @@ goodForm = {username: "alice", password: "FooBarBaz"}
 main :: Effect Unit
 main = do
   printValidation $ validateForm emptyUsernameAndPassword
-  -- > (Invalid [(BadUsername [FieldIsEmpty,FieldIsTooShort]),(BadPassword [FieldIsEmpty,FieldIsTooShort,FieldIsAllLower])])
+  -- > invalid ((FormValidationErrors (fromFoldable [(Tuple InvalidUsername (NonEmptyArray [FieldIsEmpty,FieldIsTooShort])),(Tuple InvalidPassword (NonEmptyArray [FieldIsEmpty,FieldIsTooShort,FieldIsAllLower]))])))
 
   printValidation $ validateForm shortUsernameAndPassword
-  -- > (Invalid [(BadUsername [FieldIsTooShort]),(BadPassword [FieldIsTooShort,FieldIsAllLower])])
+  -- > invalid ((FormValidationErrors (fromFoldable [(Tuple InvalidUsername (NonEmptyArray [FieldIsTooShort])),(Tuple InvalidPassword (NonEmptyArray [FieldIsTooShort,FieldIsAllLower]))])))
 
   printValidation $ validateForm lowerCasePassword
-  -- > (Invalid [(BadPassword [FieldIsAllLower])])
+  -- > invalid ((FormValidationErrors (fromFoldable [(Tuple InvalidPassword (NonEmptyArray [FieldIsAllLower]))])))
 
   printValidation $ validateForm upperCasePassword
-  -- > (Invalid [(BadPassword [FieldIsAllUpper])])
+  -- > invalid ((FormValidationErrors (fromFoldable [(Tuple InvalidPassword (NonEmptyArray [FieldIsAllUpper]))])))
 
   printValidation $ validateForm goodForm
-  -- > (Valid "{\"username\":\"alice\",\"password\":\"FooBarBaz\"}")
+  -- > pure ("{\"username\":\"alice\",\"password\":\"FooBarBaz\"}")
+
   where
     printValidation = logShow <<< (map unsafeStringify)
