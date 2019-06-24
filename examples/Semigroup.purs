@@ -13,6 +13,7 @@ import Data.Generic.Rep.Ord (genericCompare)
 import Data.Generic.Rep.Show (genericShow)
 import Data.Map (Map)
 import Data.Map as Map
+import Data.Newtype (class Newtype, over2)
 import Data.String (length, null, toLower, toUpper)
 import Data.Validation.Semigroup (V, invalid)
 import Global.Unsafe (unsafeStringify)
@@ -133,12 +134,16 @@ instance ordInvalidField :: Ord InvalidField where
 newtype FormValidationErrors =
   FormValidationErrors (Map InvalidField (NonEmptyArray ValidationError))
 
--- | Provide a `Semigroup` instance for `FormValidationErrors` that combines
+-- | Derive a `Newtype` isntance for `FormValidationErrors` so that we may use
+-- | generic functions that can operate over it as if it were a plain 
+-- | `Map InvalidField (NonEmptyArray ValidationError)`.
+derive instance newtypeFormValidationErrors :: Newtype FormValidationErrors _
+
+-- | Derive a `Semigroup` instance for `FormValidationErrors` that combines
 -- | errors using the `Map.unionWith` operation, so as to avoid returning 
 -- | duplicate entries when fields fail with overlapping errors.
 instance semigroupFormValidationErrors :: Semigroup FormValidationErrors where
-  append (FormValidationErrors errs1) (FormValidationErrors errs2) =
-    FormValidationErrors $ Map.unionWith (<>) errs1 errs2 
+  append = over2 FormValidationErrors (Map.unionWith (<>))
 
 -- | Generically derive a `Show` instance for `FormValidationError` so that we
 -- | may print these errors to the console later.
