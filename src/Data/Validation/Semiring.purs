@@ -38,6 +38,12 @@ import Data.Newtype (class Newtype)
 -- |   <$> validateName person.first
 -- |   <*> validateName person.last
 -- |   <*> (validateEmail person.contact <|> validatePhone person.contact)
+-- |
+-- | main :: Effect Unit
+-- | main = do
+-- |   logShow $ validate { first: "Jonh", last: "Doe", contact: "invalidEmailOrPhone" }
+-- |   -- for example if all validators return error, it will output
+-- |   -- > invalid ((Free (((InvalidName "Jonh") : (InvalidName "Doe") : (InvalidEmail "invalidEmailOrPhone") : Nil) : ((InvalidName "Jonh") : (InvalidName "Doe") : (InvalidPhone "invalidEmailOrPhone") : Nil) : Nil)))
 -- | ```
 newtype V err result = V (Either err result)
 
