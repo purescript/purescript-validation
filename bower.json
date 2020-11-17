@@ -16,18 +16,18 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-bifunctors": "^4.0.0",
-    "purescript-control": "^4.0.0",
-    "purescript-either": "^4.0.0",
-    "purescript-foldable-traversable": "^4.0.0",
-    "purescript-prelude": "^4.0.0",
-    "purescript-newtype": "^3.0.0"
+    "purescript-bifunctors": "master",
+    "purescript-control": "master",
+    "purescript-either": "master",
+    "purescript-foldable-traversable": "master",
+    "purescript-prelude": "master",
+    "purescript-newtype": "master"
   },
   "devDependencies": {
-    "purescript-psci-support": "^4.0.0",
-    "purescript-console": "^4.2.0",
-    "purescript-generics-rep": "^6.1.0",
-    "purescript-ordered-collections": "^1.6.0",
-    "purescript-strings": "^4.0.0"
+    "purescript-psci-support": "master",
+    "purescript-console": "master",
+    "purescript-generics-rep": "master",
+    "purescript-ordered-collections": "master",
+    "purescript-strings": "master"
   }
 }

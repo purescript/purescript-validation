@@ -16,7 +16,6 @@ import Data.Map as Map
 import Data.Newtype (class Newtype, over2)
 import Data.String (length, null, toLower, toUpper)
 import Data.Validation.Semigroup (V, invalid)
-import Global.Unsafe (unsafeStringify)
 
 -- | `UnvalidatedFormData` represents the raw data we might receive from a form
 -- | before any validation has been performed.
@@ -45,6 +44,9 @@ type ValidatedFormData =
   { username :: Username
   , password :: Password
   }
+
+toString :: ValidatedFormData -> String
+toString { username: (Username u)} = "{ username: '" <> u <> "', password: <not shown> }"
 
 -- | `ValidationError` represents the potential errors we might encounter during
 -- | the validation process.
@@ -251,4 +253,4 @@ main = do
   -- > pure ("{\"username\":\"alice\",\"password\":\"FooBarBaz\"}")
 
   where
-    printValidation = logShow <<< (map unsafeStringify)
+    printValidation = logShow <<< (map toString)
