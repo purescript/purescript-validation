@@ -1,14 +1,14 @@
 # purescript-validation
 
 [![Latest release](http://img.shields.io/github/release/purescript/purescript-validation.svg)](https://github.com/purescript/purescript-validation/releases)
-[![Build status](https://travis-ci.org/purescript/purescript-validation.svg?branch=master)](https://travis-ci.org/purescript/purescript-validation)
+[![Build status](https://github.com/purescript/purescript-validation/workflows/CI/badge.svg?branch=master)](https://github.com/purescript/purescript-validation/actions?query=workflow%3ACI+branch%3Amaster)
 
 Applicative validation.
 
 ## Installation
 
 ```
-bower install purescript-validation
+spago install validation
 ```
 
 ## Documentation
