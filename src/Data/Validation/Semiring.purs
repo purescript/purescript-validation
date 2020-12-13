@@ -22,6 +22,7 @@ import Data.Foldable (class Foldable)
 import Data.Ord (class Ord1)
 import Data.Traversable (class Traversable)
 import Data.Newtype (class Newtype)
+import Prim.TypeError (class Warn, Text)
 
 -- | The `V` functor, used for alternative validation
 -- |
@@ -58,7 +59,7 @@ isValid :: forall err result. V err result -> Boolean
 isValid (V (Right _)) = true
 isValid _ = false
 
-toEither :: forall err result. V err result -> Either err result
+toEither :: forall err result. Warn (Text "'toEither' is deprecated, pattern match on the constructor or use 'Data.Newtype.un V' instead") => V err result -> Either err result
 toEither (V e) = e
 
 -- | Apply a function if successful, to enable chaining of validation.
