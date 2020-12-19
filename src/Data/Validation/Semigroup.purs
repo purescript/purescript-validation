@@ -6,6 +6,7 @@
 
 module Data.Validation.Semigroup
   ( V(..)
+  , validation
   , unV
   , invalid
   , isValid
@@ -23,6 +24,7 @@ import Data.Foldable (class Foldable)
 import Data.Ord (class Ord1)
 import Data.Traversable (class Traversable)
 import Data.Newtype (class Newtype)
+import Prim.TypeError (class Warn, Text)
 
 -- | The `V` functor, used for applicative validation
 -- |
@@ -42,11 +44,16 @@ newtype V err result = V (Either err result)
 
 derive instance newtypeV :: Newtype (V err result) _
 
--- | Unpack the `V` type constructor, providing functions to handle the error
--- | and success cases.
-unV :: forall err result r. (err -> r) -> (result -> r) -> V err result -> r
-unV f _ (V (Left err)) = f err
-unV _ g (V (Right result)) = g result
+-- | Takes two functions an a `V` value, if the validation failed the error is
+-- | applied to the first function, if the validation succeeded the inner value
+-- | is applied to the second function.
+validation :: forall err result r. (err -> r) -> (result -> r) -> V err result -> r
+validation f _ (V (Left err)) = f err
+validation _ g (V (Right result)) = g result
+
+-- | Deprecated previous name of `validation`.
+unV :: forall err result r. Warn (Text "'unV' is deprecated, use 'validation' instead") => (err -> r) -> (result -> r) -> V err result -> r
+unV = validation
 
 -- | Fail with a validation error.
 invalid :: forall err result. err -> V err result
@@ -68,7 +75,7 @@ toEither (V e) = e
 -- | (`>>=` would be expected to be consistent).
 andThen :: forall err a b. V err a -> (a -> V err b) -> V err b
 andThen v1 f =
-  unV invalid f v1
+  validation invalid f v1
 
 derive instance eqV :: (Eq err, Eq result) => Eq (V err result)
 derive instance eq1V :: Eq err => Eq1 (V err)
@@ -101,10 +108,10 @@ instance monoidV :: (Semigroup err, Monoid a) => Monoid (V err a) where
   mempty = pure mempty
 
 instance foldableV :: Foldable (V err) where
-  foldMap = unV (const mempty)
-  foldr f b = unV (const b) (flip f b)
-  foldl f b = unV (const b) (f b)
+  foldMap = validation (const mempty)
+  foldr f b = validation (const b) (flip f b)
+  foldl f b = validation (const b) (f b)
 
 instance traversableV :: Traversable (V err) where
-  sequence = unV (pure <<< V <<< Left) (map (V <<< Right))
-  traverse f = unV (pure <<< V <<< Left) (map (V <<< Right) <<< f)
+  sequence = validation (pure <<< V <<< Left) (map (V <<< Right))
+  traverse f = validation (pure <<< V <<< Left) (map (V <<< Right) <<< f)
