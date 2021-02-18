@@ -25,7 +25,6 @@
   },
   "devDependencies": {
     "purescript-console": "^5.0.0",
-    "purescript-generics-rep": null,
     "purescript-ordered-collections": "^2.0.0",
     "purescript-psci-support": "^5.0.0",
     "purescript-strings": "^5.0.0"
