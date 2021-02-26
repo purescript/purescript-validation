@@ -4,7 +4,7 @@
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "git://github.com/purescript/purescript-validation.git"
+    "url": "https://github.com/purescript/purescript-validation.git"
   },
   "ignore": [
     "**/.*",
@@ -16,18 +16,17 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-bifunctors": "master",
-    "purescript-control": "master",
-    "purescript-either": "master",
-    "purescript-foldable-traversable": "master",
-    "purescript-prelude": "master",
-    "purescript-newtype": "master"
+    "purescript-bifunctors": "^5.0.0",
+    "purescript-control": "^5.0.0",
+    "purescript-either": "^5.0.0",
+    "purescript-foldable-traversable": "^5.0.0",
+    "purescript-newtype": "^4.0.0",
+    "purescript-prelude": "^5.0.0"
   },
   "devDependencies": {
-    "purescript-psci-support": "master",
-    "purescript-console": "master",
-    "purescript-generics-rep": "master",
-    "purescript-ordered-collections": "master",
-    "purescript-strings": "master"
+    "purescript-console": "^5.0.0",
+    "purescript-ordered-collections": "^2.0.0",
+    "purescript-psci-support": "^5.0.0",
+    "purescript-strings": "^5.0.0"
   }
 }
