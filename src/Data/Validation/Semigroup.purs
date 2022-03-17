@@ -7,7 +7,6 @@
 module Data.Validation.Semigroup
   ( V(..)
   , validation
-  , unV
   , invalid
   , isValid
   , toEither
@@ -50,10 +49,6 @@ derive instance newtypeV :: Newtype (V err result) _
 validation :: forall err result r. (err -> r) -> (result -> r) -> V err result -> r
 validation f _ (V (Left err)) = f err
 validation _ g (V (Right result)) = g result
-
--- | Deprecated previous name of `validation`.
-unV :: forall err result r. Warn (Text "'unV' is deprecated, use 'validation' instead") => (err -> r) -> (result -> r) -> V err result -> r
-unV = validation
 
 -- | Fail with a validation error.
 invalid :: forall err result. err -> V err result
