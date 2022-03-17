@@ -23,7 +23,6 @@ import Data.Foldable (class Foldable)
 import Data.Ord (class Ord1)
 import Data.Traversable (class Traversable)
 import Data.Newtype (class Newtype)
-import Prim.TypeError (class Warn, Text)
 
 -- | The `V` functor, used for applicative validation
 -- |
