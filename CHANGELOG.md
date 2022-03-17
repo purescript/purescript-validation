@@ -6,6 +6,7 @@ Notable changes to this project are documented in this file. The format is based
 
 Breaking changes:
 - Update project and deps to PureScript v0.15.0 (#37 by @JordanMartinez)
+- Drop deprecated `unV`; use `validation` instead (#38 by @JordanMartinez)
 
 New features:
 
