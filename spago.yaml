@@ -1,0 +1,20 @@
+package:
+  name: validation
+  description: Applicative validation
+  build:
+    strict: true
+    pedanticPackages: true
+  publish:
+    version: 6.0.1
+    license: BSD-3-Clause
+    location:
+      githubOwner: purescript
+      githubRepo: purescript-validation
+  dependencies:
+    - bifunctors: ">=6.0.0 <7.0.0"
+    - control: ">=6.0.0 <7.0.0"
+    - either: ">=6.0.0 <7.0.0"
+    - foldable-traversable: ">=6.0.0 <7.0.0"
+    - newtype: ">=5.0.0 <6.0.0"
+    - prelude: ">=6.0.0 <7.0.0"
+workspace: {}
