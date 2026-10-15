@@ -19,9 +19,9 @@ import Data.Bifunctor (class Bifunctor)
 import Data.Either (Either(..))
 import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable)
+import Data.Newtype (class Newtype)
 import Data.Ord (class Ord1)
 import Data.Traversable (class Traversable)
-import Data.Newtype (class Newtype)
 
 -- | The `V` functor, used for alternative validation
 -- |
@@ -87,7 +87,7 @@ derive newtype instance functorV :: Functor (V err)
 
 derive newtype instance bifunctorV :: Bifunctor V
 
-instance applyV :: Semiring err => Apply (V err)  where
+instance applyV :: Semiring err => Apply (V err) where
   apply (V (Left err1)) (V (Left err2)) = V (Left (err1 * err2))
   apply (V (Left err)) _ = V (Left err)
   apply _ (V (Left err)) = V (Left err)

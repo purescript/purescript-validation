@@ -2,20 +2,20 @@ module Semigroup where
 
 import Prelude
 
-import Effect (Effect)
-import Effect.Console (logShow)
 import Data.Array.NonEmpty (NonEmptyArray)
 import Data.Array.NonEmpty as NonEmpty
 import Data.Bifunctor (bimap)
-import Data.Generic.Rep (class Generic)
 import Data.Eq.Generic (genericEq)
-import Data.Ord.Generic (genericCompare)
-import Data.Show.Generic (genericShow)
+import Data.Generic.Rep (class Generic)
 import Data.Map (Map)
 import Data.Map as Map
 import Data.Newtype (class Newtype, over2)
+import Data.Ord.Generic (genericCompare)
+import Data.Show.Generic (genericShow)
 import Data.String (length, null, toLower, toUpper)
 import Data.Validation.Semigroup (V, invalid)
+import Effect (Effect)
+import Effect.Console (logShow)
 
 -- | `UnvalidatedFormData` represents the raw data we might receive from a form
 -- | before any validation has been performed.
@@ -46,7 +46,7 @@ type ValidatedFormData =
   }
 
 toString :: ValidatedFormData -> String
-toString { username: (Username u)} = "{ username: '" <> u <> "', password: <not shown> }"
+toString { username: (Username u) } = "{ username: '" <> u <> "', password: <not shown> }"
 
 -- | `ValidationError` represents the potential errors we might encounter during
 -- | the validation process.
@@ -166,10 +166,10 @@ instance showFormValidationErrors :: Show FormValidationErrors where
 -- | Otherwise, it returns the input wrapped in the `Username` newtype to
 -- | distinguish it from a normal, unvalidated `String`.
 validateUsername :: String -> V FormValidationErrors Username
-validateUsername input = 
+validateUsername input =
   bimap (FormValidationErrors <<< Map.singleton InvalidUsername) Username
-    $  validateNonEmpty input
-    *> validateMinimumLength 4 input
+    $ validateNonEmpty input
+        *> validateMinimumLength 4 input
 
 -- | This function validates that an input string conforms to our requirements
 -- | for a valid password. Namely, we require that the input be non-empty, at
@@ -185,11 +185,11 @@ validateUsername input =
 -- | Otherwise, it returns the input wrapped in the `Password` newtype to
 -- | distinguish it from a normal, unvalidated `String`.
 validatePassword :: String -> V FormValidationErrors Password
-validatePassword input = 
+validatePassword input =
   bimap (FormValidationErrors <<< Map.singleton InvalidPassword) Password
-    $  validateNonEmpty input
-    *> validateMinimumLength 6 input
-    *> validateMixedCase input
+    $ validateNonEmpty input
+        *> validateMinimumLength 6 input
+        *> validateMixedCase input
 
 -- | This function validates that an `UnvalidatedFormData` record contains both
 -- | a valid username and a valid password, per the requirements specified in
@@ -201,34 +201,34 @@ validatePassword input =
 -- |
 -- | Otherwise, it returns the validated fields in the `ValidatedFormData`
 -- | record specified above.
-validateForm 
-  :: UnvalidatedFormData 
+validateForm
+  :: UnvalidatedFormData
   -> V FormValidationErrors ValidatedFormData
-validateForm {username, password} = {username: _, password: _}
+validateForm { username, password } = { username: _, password: _ }
   <$> validateUsername username
   <*> validatePassword password
 
 -- | This is a form that will fail validation, since both fields are empty
 -- | strings.
 emptyUsernameAndPassword :: UnvalidatedFormData
-emptyUsernameAndPassword = {username: "", password: ""}
+emptyUsernameAndPassword = { username: "", password: "" }
 
 -- | This is a form that will fail validation, since both fields are too short.
 shortUsernameAndPassword :: UnvalidatedFormData
-shortUsernameAndPassword = {username: "foo", password: "bar"}
+shortUsernameAndPassword = { username: "foo", password: "bar" }
 
 -- | This is a form that will fail validation, since the password lowercase.
 lowerCasePassword :: UnvalidatedFormData
-lowerCasePassword = {username: "alice", password: "foobarbaz"}
+lowerCasePassword = { username: "alice", password: "foobarbaz" }
 
 -- | This is a form that will fail validation, since the password uppercase.
 upperCasePassword :: UnvalidatedFormData
-upperCasePassword = {username: "alice", password: "FOOBARBAZ"}
+upperCasePassword = { username: "alice", password: "FOOBARBAZ" }
 
 -- | This is a form that will pass validation, as it conforms to all the
 -- | requirements outlined in the validation functions above.
 goodForm :: UnvalidatedFormData
-goodForm = {username: "alice", password: "FooBarBaz"}
+goodForm = { username: "alice", password: "FooBarBaz" }
 
 -- | Run through all of the example forms and print the validation results to
 -- | the console.
@@ -253,4 +253,4 @@ main = do
   -- > pure ("{\"username\":\"alice\",\"password\":\"FooBarBaz\"}")
 
   where
-    printValidation = logShow <<< (map toString)
+  printValidation = logShow <<< (map toString)

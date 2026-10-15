@@ -20,9 +20,9 @@ import Data.Bifunctor (class Bifunctor)
 import Data.Either (Either(..))
 import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable)
+import Data.Newtype (class Newtype)
 import Data.Ord (class Ord1)
 import Data.Traversable (class Traversable)
-import Data.Newtype (class Newtype)
 
 -- | The `V` functor, used for applicative validation
 -- |
