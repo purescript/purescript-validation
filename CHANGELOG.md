@@ -6,7 +6,7 @@ Notable changes to this project are documented in this file. The format is based
 
 Other improvements:
 
-- Migrate from Bower/Pulp to Spago, update CI and formatting, and restore the runnable example.
+- Migrate from Bower/Pulp to Spago, update CI and formatting, and restore the runnable example (#41 by @thomashoneyman).
 
 ## [v6.0.0](https://github.com/purescript/purescript-validation/releases/tag/v6.0.0) - 2022-04-27
 
