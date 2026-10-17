@@ -2,7 +2,7 @@
 
 Notable changes to this project are documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [Unreleased](https://github.com/purescript/purescript-validation/compare/v6.0.1...HEAD)
 
 Breaking changes:
 
@@ -17,6 +17,7 @@ Other improvements:
 Other improvements:
 
 - Migrate from Bower/Pulp to Spago, update CI and formatting, and restore the runnable example (#41 by @thomashoneyman).
+- Use explicit case expressions for validation branches (#41 by @thomashoneyman).
 
 ## [v6.0.0](https://github.com/purescript/purescript-validation/releases/tag/v6.0.0) - 2022-04-27
 
