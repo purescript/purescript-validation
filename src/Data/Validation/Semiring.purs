@@ -19,9 +19,9 @@ import Data.Bifunctor (class Bifunctor)
 import Data.Either (Either(..))
 import Data.Eq (class Eq1)
 import Data.Foldable (class Foldable)
+import Data.Newtype (class Newtype)
 import Data.Ord (class Ord1)
 import Data.Traversable (class Traversable)
-import Data.Newtype (class Newtype)
 
 -- | The `V` functor, used for alternative validation
 -- |
@@ -47,8 +47,9 @@ derive instance newtypeV :: Newtype (V err result) _
 -- | applied to the first function, if the validation succeeded the inner value
 -- | is applied to the second function.
 validation :: forall err result r. (err -> r) -> (result -> r) -> V err result -> r
-validation f _ (V (Left err)) = f err
-validation _ g (V (Right result)) = g result
+validation f g (V value) = case value of
+  Left err -> f err
+  Right result -> g result
 
 -- | Fail with a validation error.
 invalid :: forall err result. err -> V err result
@@ -56,8 +57,9 @@ invalid = V <<< Left
 
 -- | Test whether validation was successful or not.
 isValid :: forall err result. V err result -> Boolean
-isValid (V (Right _)) = true
-isValid _ = false
+isValid = case _ of
+  V (Right _) -> true
+  _ -> false
 
 toEither :: forall err result. V err result -> Either err result
 toEither (V e) = e
@@ -87,11 +89,12 @@ derive newtype instance functorV :: Functor (V err)
 
 derive newtype instance bifunctorV :: Bifunctor V
 
-instance applyV :: Semiring err => Apply (V err)  where
-  apply (V (Left err1)) (V (Left err2)) = V (Left (err1 * err2))
-  apply (V (Left err)) _ = V (Left err)
-  apply _ (V (Left err)) = V (Left err)
-  apply (V (Right f)) (V (Right x)) = V (Right (f x))
+instance applyV :: Semiring err => Apply (V err) where
+  apply left right = case left, right of
+    V (Left err1), V (Left err2) -> V (Left (err1 * err2))
+    V (Left err), _ -> V (Left err)
+    _, V (Left err) -> V (Left err)
+    V (Right f), V (Right x) -> V (Right (f x))
 
 instance applicativeV :: Semiring err => Applicative (V err) where
   pure = V <<< Right
@@ -103,9 +106,10 @@ instance monoidV :: (Semiring err, Monoid a) => Monoid (V err a) where
   mempty = pure mempty
 
 instance altV :: Semiring err => Alt (V err) where
-  alt (V (Left err1)) (V (Left err2)) = V (Left (err1 + err2))
-  alt (V (Left _)) a = a
-  alt (V (Right a)) _ = V (Right a)
+  alt left right = case left, right of
+    V (Left err1), V (Left err2) -> V (Left (err1 + err2))
+    V (Left _), a -> a
+    V (Right a), _ -> V (Right a)
 
 instance plusV :: Semiring err => Plus (V err) where
   empty = V (Left zero)
